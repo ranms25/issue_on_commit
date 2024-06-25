@@ -25,3 +25,17 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
+      # We are creatin an issue using REST API
+      - name: Create issue using REST API
+        run: |
+          curl --request POST \
+          --url https://api.github.com/repo/{{ github.repository }}/issues \ 
+          --header 'authorziation: Bearer $ {{ secrets.GITHUB_TOKEN}}' \
+          --header 'content-type: application/json' \ 
+          --data '{
+            "title" : "Automated issue for commit: $ {{github.sha }}",
+            "body" : "This issue was automaticaly created by the GitHub Actio
+                      workflow **${{ github.workflow }}**. \n\n The commit hash was:
+                      _${{ github.sha }}_." 
+            }' 
+
